@@ -1,20 +1,31 @@
-function rotateText() {
-      const rotator = document.getElementsByClassName('rotator')[0];
-      const cases = rotator.getElementsByClassName('rotator__case');
-      const activeIndex = Array.from(cases).findIndex((el) =>
-        el.classList.contains('rotator__case_active')
-      );
-      const nextIndex = (activeIndex + 1) % cases.length;
+// Получаем все элементы rotator на странице
+const rotators = document.querySelectorAll('.rotator');
 
-      cases[activeIndex].classList.remove('rotator__case_active');
-      cases[nextIndex].classList.add('rotator__case_active');
+// Для каждого rotator на странице запускаем смену текстовых блоков
+rotators.forEach(rotator => {
+  const cases = rotator.querySelectorAll('.rotator__case');
+  let currentCaseIndex = 0;
 
-      const nextCase = cases[nextIndex];
-      const speed = parseInt(nextCase.dataset.speed);
-      const color = nextCase.dataset.color;
+  // Функция для смены текстовых блоков
+  const changeCase = () => {
+    // Скрываем текущий текстовый блок
+    cases[currentCaseIndex].classList.remove('rotator__case_active');
 
-      rotator.style.transitionDuration = `${speed}ms`;
-      rotator.style.color = color;
-    }
+    // Переходим к следующему текстовому блоку
+    currentCaseIndex = (currentCaseIndex + 1) % cases.length;
 
-    setInterval(rotateText, 1000);
+    // Получаем опции из data-атрибутов текущего текстового блока
+    const speed = parseInt(cases[currentCaseIndex].dataset.speed);
+    const color = cases[currentCaseIndex].dataset.color;
+
+    // Применяем опции к текущему текстовому блоку
+    cases[currentCaseIndex].classList.add('rotator__case_active');
+    cases[currentCaseIndex].style.color = color;
+
+    // Запускаем смену текстовых блоков с учетом заданной скорости
+    setTimeout(changeCase, speed);
+  };
+
+  // Запускаем смену текстовых блоков с задержкой в 1 секунду
+  setTimeout(changeCase, 1000);
+});
